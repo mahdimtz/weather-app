@@ -6,16 +6,22 @@ import {
   Container,
   Stack,
   Typography,
+  useColorScheme,
 } from "@mui/material";
 import Header from "../components/header/header";
 import IconLocation from "../assets/icons/IconLocation";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
-import { formatTime, getCurrentWeekday } from "../utils/helper/dateFormater";
+import { formatTime, getCurrentWeekday, getDayOfWeek } from "../utils/helper/dateFormater";
 
 import Footer from "../components/footer/footer";
 import WeatherCard from "../components/weather-card/weather-card";
+import { findExtreme } from "../utils/helper/findNumber";
+import weatherCode from "../constants/weatherCode";
+import Icon from "../components/icons/Icon";
+import { useAppContext } from "../context/app/app-context";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   interface City {
@@ -43,11 +49,14 @@ const Dashboard = () => {
     { id: "3", nameEn: "Shiraz", nameFa: "شیراز" },
     { id: "4", nameEn: "Tabriz", nameFa: "تبریز" },
   ];
-
   const [selectedCity, setSelectedCity] = useState<string>("1");
-  const [language, setLanguage] = useState<"en" | "fa">("en");
   const [location, setLocation] = useState<Location>();
   const [weather, SetWeather] = useState();
+  const days = [...new Array(14)];
+
+  const{language} = useAppContext()
+  const { mode, setMode } = useColorScheme();
+  const {t} = useTranslation()
 
   async function LocationAPI(cityID: string = "1") {
     try {
@@ -68,6 +77,19 @@ const Dashboard = () => {
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCity(event.target.value);
     LocationAPI(event.target.value);
+  };
+
+  const handleWeather = (code:number,lang:"en"|"fa") => {
+    
+    let temp = weatherCode.filter((item) => {
+      return item[0] === code;
+    });
+    if(lang === "en"){
+    return temp[0][1];
+
+    }else if(lang === "fa"){
+      return temp[0][2];
+    }
   };
   async function WeatherAPI() {
     try {
@@ -90,7 +112,28 @@ const Dashboard = () => {
     margin: { bottom: 20, left: 25, right: 5 },
     height: 234,
   };
+  const handleIcon = (code:number,width?:string ,height?:string) => {
+    let temp = weatherCode.filter((item) => {
+      return item[0] === code;
+    });
+    switch (temp[0][3]) {
+      case "FaSnowflake":
+        return <Icon src="/imageIcon/Rain cloud.png" width={width} height={height}/>;
+      case "FaSun":
+        return <Icon src="/imageIcon/sun.png"  width={width} height={height}  />;
+        
+      case "FaCloudRain":
+        return <Icon src="/imageIcon/Rain cloud.png"  width={width} height={height}  />;
+      case "FaCloud":
+        return <Icon src="/imageIcon/cloud.png"   width={width} height={height}  />;
+      case "FaWind":
+        return <Icon  src="/imageIcon/storm.png"  width={width} height={height} />;
 
+      default:
+        break;
+    }
+  };
+  
   return (
     <>
       <Header
@@ -98,20 +141,21 @@ const Dashboard = () => {
         handleCityChange={handleCityChange}
         selectedCity={selectedCity}
         cities={cities}
+        setMode={setMode}
       />
       <Container maxWidth={"xl"} sx={{ marginTop: "28px" }}>
-        <Stack direction="row" spacing={4}>
-          <Box
+        <Stack   sx={{flexDirection:{md:"row",xs:"col"},gap:"41px"}}>
+          <Stack
             sx={(theme) => ({
-              background: "#E1E9EE",
+             
               borderRadius: "24px",
-              width:{xl:"607px",sm:"50%"},
+              width:{xl:"607px",md:"50%"},
               minHeight: "234px",
               backgroundColor:
                 theme.palette.mode === "dark"
                   ? theme.palette.secondary.dark
-                  : theme.palette.primary.light,
-              color: theme.palette.mode === "dark" ? "#fff" : "#000",
+                  : theme.palette.primary.main,
+              color: theme.palette.mode === "dark" ? "#fff" : "#003464"
             })}
           >
             <Box
@@ -146,7 +190,7 @@ const Dashboard = () => {
                     marginTop: "16px",
                   }}
                 >
-                  {getCurrentWeekday()}
+                  {getDayOfWeek( weather?.daily?.time[0],language,true)}
                 </Typography>
                 <Box
                   sx={{
@@ -169,7 +213,7 @@ const Dashboard = () => {
                   }}
                   variant="caption"
                 >
-                  {weather?.current.temperature_2m} C
+                  {weather?.current?.temperature_2m}<span>&#8451;</span>
                 </Typography>
                 <Box
                   sx={{
@@ -179,31 +223,27 @@ const Dashboard = () => {
                     lineHeight: "16.41px",
                   }}
                 >
-                  <span>High: 27</span>
-                  <span> Low: 10</span>
+                  <span>{language === "en" ? "High":"بیشینه"}:{weather && findExtreme(weather.daily.temperature_2m_max,"max")}</span>
+                  <span> {language === "en"?"Low":"کمینه"}:{weather && findExtreme(weather.daily.temperature_2m_min,"min")}</span>
                 </Box>
               </Box>
               <Box
                 sx={(theme) => ({
-                  backgroundColor:
-                    theme.palette.mode === "dark"
-                      ? theme.palette.secondary.dark
-                      : theme.palette.primary.light,
-                  color: theme.palette.mode === "dark" ? "#fff" : "#000",
+                
                   display: "flex",
                   flexDirection: "column",
                 })}
               >
-                <img src="/images/Frame 30.png" width={187} height={129} />
+                { weather && handleIcon(weather.daily.weather_code[0],"194px","110px")}
                 <Typography variant="caption" sx={{ fontSize: "32px" }}>
-                  Cloudy
+                {weather && handleWeather(weather?.current?.weather_code,language)}
                 </Typography>
                 <Typography variant="caption" sx={{ fontSize: "14px" }}>
-                  Feels Like 26
+                  {weather?.current?.temperature_2m}  {language === "en"?"Feels Like":"درجه احساس می شود"}
                 </Typography>
               </Box>
             </Box>
-          </Box>
+          </Stack>
 
           <Box
             sx={(theme) => ({
@@ -213,21 +253,25 @@ const Dashboard = () => {
               backgroundColor:
                 theme.palette.mode === "dark"
                   ? theme.palette.secondary.dark
-                  : theme.palette.primary.light,
+                : theme.palette.primary.main,
               color: theme.palette.mode === "dark" ? "#fff" : "#000",
             })}
           >
             <Typography
-              sx={{  fontSize: "18px", fontWeight: "700" }}
+              
+              sx={(theme)=>({
+                fontSize: "18px", fontWeight: "700",
+                    color: theme.palette.mode === "dark" ? "#fff" : "#003464",
+              })}
             >
-              Average Monthly Temprature
+             {language === "en"?"Average Monthly Temprature":"میانگین دمای ماهانه"}
             </Typography>
             <LineChart
               {...chartsParams}
               series={[
                 {
-                  data: [15, 23, 18, 19, 13],
-                  label: "Example",
+                  data: [15, 15, 22, 19, 13],
+                  
                 },
               ]}
             />
@@ -235,10 +279,10 @@ const Dashboard = () => {
         </Stack>
         <Box
           sx={(theme) => ({
-            width: "100%",
-            height: "381px",
+            
+            
             marginTop: "28px",
-            padding: "24px 0 26px 28.41px",
+            padding: "24px 28.41px 26px 28.41px",
             marginBottom: "102px",
             borderRadius: "24px",
             background: "#E1E9EE",
@@ -246,32 +290,30 @@ const Dashboard = () => {
             backgroundColor:
               theme.palette.mode === "dark"
                 ? theme.palette.secondary.dark
-                : theme.palette.primary.light,
+                : theme.palette.primary.main,
             color: theme.palette.mode === "dark" ? "#fff" : "#000",
-            overflowX:{md:"scroll"}
+            overflowX:"scroll"
           })}
         >
           <Typography
             variant="caption"
-            sx={{ fontSize: "24px", }}
+            
+            sx={(theme)=>({
+              fontSize: "24px",
+                  color: theme.palette.mode === "dark" ? "#fff" : "#003464",
+            })}
           >
-            2 weeks Forecast
+            {t("dashboard.title")}
           </Typography>
-          <Stack direction={"row"} spacing={"18px"} className="card-container">
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
-            <WeatherCard />
+          <Stack direction={"row"} sx={{gap:"18px"}} >
+          {weather
+          ? days.map((item, index) => {
+              return (
+               
+                <WeatherCard time={weather?.daily?.time[index]} temp={weather?.daily?.temperature_2m_max[index]} handleIcon={handleIcon(weather.daily.weather_code[index])} laguage={language} />
+              );
+            })
+          : null}
           </Stack>
         </Box>
       </Container>

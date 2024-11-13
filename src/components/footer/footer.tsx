@@ -1,44 +1,47 @@
 import { Stack, Box, Typography } from "@mui/material";
 import React from "react";
 import { formatTime } from "../../utils/helper/dateFormater";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const {t} = useTranslation()
   return (
     <footer>
       <Stack
-        direction={"row"}
         sx={(theme) => ({
           height: "106px",
-          // background:
-          //   "linear-gradient(90deg, #F3FAFE 0%, rgba(204, 221, 221, 0.619608) 51%, #F3FAFE 100%)",
+          flexDirection:{md:"row",xs:"column"},
+          alignItems:"center",
+
+          
           justifyContent: "space-between",
           padding: "28px 24px",
           backgroundColor:
             theme.palette.mode === "dark"
               ? theme.palette.secondary.contrastText
-              : theme.palette.primary.light,
-          color: theme.palette.mode === "dark" ? "#fff" : "#000",
+              : theme.palette.secondary.contrastText,
+          color: theme.palette.mode === "dark" ? "#fff" : "#003464",
         })}
       >
         <Stack direction={"row"} spacing={"12px"} sx={{ alignItems: "center" }}>
           <img src="/images/logo.png" alt="" width={50} height={50} />
-          <Typography variant="caption" sx={{ fontSize: "12px" }}>
-            All rights of this site are reserved for Nadin Sadr Aria Engineering
-            Company.
+          <Typography variant="caption" sx={{ fontSize: "12px", }}>
+            {t("footer.title")}
           </Typography>
         </Stack>
-        <Stack direction={"row"} spacing={"40px"} sx={{ alignItems: "center" }}>
+        <Stack direction={"row"}   sx={{ alignItems: "center",gap:"40px" }}>
           <Typography
             sx={{ fontSize: "14px", fontWeight: "400" }}
             variant="caption"
           >
-            contact us : info@nadin.ir
+            {t("footer.contact")}
           </Typography>
           <Typography
             sx={{ fontSize: "14px", fontWeight: "400" }}
             variant="caption"
           >
             {formatTime(new Date())}
+
           </Typography>
         </Stack>
       </Stack>

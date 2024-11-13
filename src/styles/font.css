@@ -1,0 +1,12 @@
+
+@font-face {
+    font-family: 'vazir';
+    src: url('../assets/font/Vazirmatn-Black.woff2') format('woff2'),
+     url('../assets/font/Vazirmatn-Bold.woff2') format('woff2'),
+     url('../assets/font/Vazirmatn-Medium.woff2') format('woff2'),
+     url('../assets/font/Vazirmatn-Regular.woff2') format('woff2'),
+     url('../assets/font/Vazirmatn-SemiBold.woff2') format('woff2');
+
+   
+    font-style: normal;
+  }

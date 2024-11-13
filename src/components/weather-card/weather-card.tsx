@@ -1,6 +1,11 @@
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { getDayOfWeek } from "../../utils/helper/dateFormater";
+import { useAppContext } from "../../context/app/app-context";
 
-const WeatherCard = () => {
+const WeatherCard = ({time,temp,handleIcon}) => {
+  const {language} = useAppContext();
+
+  
   return (
     <Card
       sx={(theme) => ({
@@ -11,11 +16,10 @@ const WeatherCard = () => {
         backgroundColor:
           theme.palette.mode === "dark"
             ? theme.palette.secondary.contrastText
-            : theme.palette.primary.light,
-        color: theme.palette.mode === "dark" ? "#fff" : "#000",
+            : theme.palette.secondary.contrastText,
+        color: theme.palette.mode === "dark" ? "#fff" : "#003464",
       })}
     >
-      {/* sx={{borderBottom:" 2px solid linear-gradient(90deg, rgba(54, 54, 54, 0) 0%, #7E7E7E 48.5%, rgba(54, 54, 54, 0) 100%"}} */}
 
       <CardContent
         sx={{
@@ -27,14 +31,14 @@ const WeatherCard = () => {
           padding: "45.5px 15px",
         }}
       >
-        <Typography sx={{ fontSize: "14px" }}>Today</Typography>
-        <img src="/images/Frame 30.png" width={69} height={51} />
+        <Typography sx={{ fontSize: "14px" }}>{getDayOfWeek(time,language)}</Typography>
+        {handleIcon}
 
         <Typography
           sx={{ fontSize: "18px", fontWeight: "500" }}
           variant="caption"
         >
-          21C
+         {temp}<span>&#8451;</span>
         </Typography>
       </CardContent>
     </Card>

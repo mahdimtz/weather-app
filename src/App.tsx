@@ -6,6 +6,7 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 import { createThemes } from "./theme";
 import { useEffect } from "react";
+import { useAppContext } from "./context/app/app-context";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,17 +21,24 @@ function App() {
   ]);
 
   const { lightTheme, darkTheme } = createThemes();
+  const {themeMode } = useAppContext();
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const prefersDarkMode = useMediaQuery(`(prefers-color-scheme:${themeMode} )`);
+  console.log(themeMode);
+  
+  console.log(prefersDarkMode);
+  
   const theme = prefersDarkMode ? darkTheme : lightTheme;
+  console.log(theme);
+  
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme.palette.mode === 'dark' ? '#121212' : '#fff';
+    document.body.style.backgroundColor = theme.palette.mode === 'dark' ? '#121212' : '#F5F9FC';
   }, [theme]);
 
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>

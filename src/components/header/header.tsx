@@ -6,10 +6,16 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 import { useState } from "react";
+import { useAppContext } from "../../context/app/app-context";
+import LogOut from "../../assets/icons/IconLogOut";
+import { useNavigate } from "react-router-dom";
+import IconLogOut from "../../assets/icons/IconLogOut";
+import { useTranslation } from "react-i18next";
 
 const Header = ({
   language,
@@ -21,7 +27,12 @@ const Header = ({
   handleCityChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedCity: string;
   cities: any;
+  setMode:any
 }) => {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const labelColor = theme.palette.mode === 'dark' ? 'white' : '#AFBCC4';
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,35 +40,79 @@ const Header = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const navigate = useNavigate()
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const {changeTheme,changeLanguage} = useAppContext();
+
+const changeThemeHandler = (mode:string)=>{
+
+  if(mode==="dark"){
+  console.log(`mode:${mode}`);
+
+    changeTheme("dark");
+  }
+  if(mode ==="light"){
+  console.log(`mode:${mode}`);
+
+  changeTheme("light");
+  
+
+
+  }
+    
+}
+
+const changeLanguageHandler = (lang:string)=>{
+
+  if(lang==="en"){
+
+    changeLanguage(lang);
+  }
+  if(lang==="fa"){
+
+    changeLanguage(lang);
+  }
+ 
+
+  
+    
+}
 
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "24px 12px",
-        boxShadow: "0px 4px 10px 0px #00000026",
-      }}
+  <header>
+      <Stack
+    direction={"row"}
+
+    sx={(theme)=>({
+      justifyContent:{xs:"center", sm:"space-between"},
+      padding: "24px 12px",
+      boxShadow: "0px 4px 10px 0px #00000026",
+      backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.secondary.contrastText
+              : theme.palette.primary.light,
+          color: theme.palette.mode === "dark" ? "#fff" : "#003464",
+    })}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <Box sx={{ display:{xs:"none",sm:"flex"}, alignItems: "center", gap: "8px" }}>
         <img src="/images/image 1.png" alt="" />
         <Typography variant="h6" sx={{ fontSize: "12px" }}>
-          Weather Dashboard
+         {t("header.title")}
         </Typography>
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <TextField
+
           select
           label={language === "fa" ? "انتخاب شهر" : "Select City"}
           value={selectedCity}
           onChange={handleCityChange}
           variant="outlined"
-          // InputLabelProps={{
-          //   shrink: true,
-          // }}
+          InputLabelProps={{
+            shrink: true,
+            style: { color: labelColor }
+          }}
           sx={{
             width: "295px",
             "& .MuiOutlinedInput-root": {
@@ -116,6 +171,7 @@ const Header = ({
           </svg>
         </IconButton>
         <Popover
+        sx={{padding:"0 16px"}}
           id={id}
           open={open}
           anchorEl={anchorEl}
@@ -129,25 +185,28 @@ const Header = ({
             direction={"column"}
             sx={{ padding: "20px 15px", width: "220px", height: "240px" }}
           >
-            <Typography variant="caption">Mode</Typography>
+            <Typography variant="caption" marginBottom={"6px"} fontSize={"16px"}>{t("header.popover.mode")}</Typography>
             <Stack direction={"row"}>
-              <Button variant="outlined">Dark</Button>
-              <Button variant="outlined">Light</Button>
+              <Button variant="outlined" onClick={()=>changeThemeHandler("dark")} sx={{width:"94px"}}>{language=== "en"?"Dark":"تاریک"}</Button>
+              <Button variant="outlined" onClick={()=>changeThemeHandler("light")} sx={{width:"94px"}}>{language=== "en"?"Light":"روشن"}</Button>
             </Stack>
             <Divider sx={{ margin: "10px 0" }} />
-            <Typography variant="caption">Language</Typography>
+            <Typography variant="caption" marginBottom={"6px"} fontSize={"16px"}>{t("header.popover.language")}</Typography>
             <Stack direction={"row"}>
-              <Button variant="outlined">En</Button>
-              <Button variant="outlined">Fa</Button>
+              <Button variant="outlined"onClick={()=>changeLanguageHandler("en")} sx={{width:"94px"}}>{language=== "en"?"En":"انگلیسی"}</Button>
+              <Button variant="outlined" onClick={()=>changeLanguageHandler("fa")} sx={{width:"94px"}}>{language=== "en"?"Fa":"فارسی"}</Button>
             </Stack>
             <Divider sx={{ margin: "10px 0" }} />
 
-            <Typography variant="caption">Exit</Typography>
+            <Button variant="text"sx={{gap:"20px"}} onClick={()=>navigate("/")}>{language=== "en"?"Exit":"خروج"}  <IconLogOut/></Button>
           </Stack>
         </Popover>
       </Box>
-    </header>
+    </Stack>
+  </header>
   );
 };
 
 export default Header;
+
+

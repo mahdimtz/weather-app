@@ -1,3 +1,6 @@
+ 
+
+
 html,
 body,
 div,
@@ -125,4 +128,9 @@ table {
 *,
 html {
   box-sizing: border-box;
+
+}
+*{
+  font-family: "vazir", sans-serif !important;
+
 }
