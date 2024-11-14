@@ -74,7 +74,7 @@ const PopOver = ({handleClose,onChangeLanguage,onChangeTheme,t,open,id,showPopOv
                   onClick={() => onChangeLanguage("fa")}
                   sx={{ width: "94px" }}
                 >
-                  {t("header.popover.languageEnBtn")}
+                  {t("header.popover.languageFnBtn")}
                 </Button>
               </Stack>
               <Divider sx={{ margin: "10px 0" }} />
