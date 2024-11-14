@@ -43,10 +43,10 @@ const Header = ({
   const id = open ? "simple-popover" : undefined;
   const { changeTheme, changeLanguage } = useAppContext();
 
-  const changeThemeHandler = (mode: string) => {
+  const changeThemeHandler = (mode: "dark"|"light") => {
     if (mode === "dark") {
       changeTheme("dark");
-    } else {
+    } else if(mode ==="light") {
       changeTheme("light");
     }
   };
@@ -54,7 +54,7 @@ const Header = ({
   const changeLanguageHandler = (lang: "en" | "fa") => {
     if (lang === "en") {
       changeLanguage(lang);
-    } else {
+    } else if(lang === "fa") {
       changeLanguage(lang);
     }
   };

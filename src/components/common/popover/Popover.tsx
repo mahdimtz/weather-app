@@ -7,7 +7,7 @@ type PopOverProps ={
     showPopOver:any
     handleClose:()=>void;
     onChangeLanguage:(params:"fa"|"en")=>void;
-    onChangeTheme:(params:string)=>void;
+    onChangeTheme:(params:"dark"|"light")=>void;
     t:(params:string)=>string;
 
 }
