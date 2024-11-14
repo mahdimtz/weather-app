@@ -110,12 +110,12 @@ import {
             <Button
               variant="contained"
              
-              sx={(theme) => ({
+              sx={{
                 width: { lg: "386px", md: "80%", xs: "100%" },
                 backgroundColor:"#2196F3",
                   
                 color: "#fff"
-              })}
+              }}
               onClick={loginHandler}
             >
               {t("login.title")}
