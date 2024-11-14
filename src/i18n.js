@@ -15,7 +15,13 @@ const resources = {
         title:"Weather Dashboard",
         popover:{
           mode:"Mode",
-          language:"Language"
+          language:"Language",
+           themeDarkBtn:"Dark",
+           themeLightBtn:"Light",
+           languageFaBtn:"Fa",
+           languageEnBtn:"En",
+           
+           exitBtn:"Exit"
         }
       },
       footer:{
@@ -40,7 +46,13 @@ const resources = {
         title:"داشبورد آب و هوا",
         popover:{
           mode:"حالت",
-          language:"زبان"
+          language:"زبان",
+           themeDarkBtn:"تاریک",
+           themeLightBtn:"روشن",
+           languageFaBtn:"فارسی",
+           languageEnBtn:"انگلیسی",
+           
+           exitBtn:"خروج"
         }
       },
       footer:{
@@ -49,6 +61,9 @@ const resources = {
       },
       dashboard:{
         title:"پیش بینی دو هفته"
+      },
+      popover:{
+
       }
       
     },

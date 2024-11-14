@@ -7,18 +7,10 @@ import { CssBaseline, useMediaQuery } from "@mui/material";
 import { createThemes } from "./theme";
 import { useEffect } from "react";
 import { useAppContext } from "./context/app/app-context";
+import router from "./router";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Login />,
-    },
-    {
-      path: "/dashboard",
-      element: <Dashborad />,
-    },
-  ]);
+
 
   const { lightTheme, darkTheme } = createThemes();
   const {themeMode } = useAppContext();

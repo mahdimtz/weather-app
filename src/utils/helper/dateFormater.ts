@@ -20,7 +20,7 @@ function getCurrentWeekday(): string {
 
 
 
-function getDayOfWeek(dateString: string, language: Language,todayIgnore?:boolean=false): string {
+function getDayOfWeek(dateString:any , language: Language,todayIgnore=false): string {
     const date = new Date(dateString);
     const today = new Date();
   
