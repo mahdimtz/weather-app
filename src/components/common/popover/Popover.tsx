@@ -1,8 +1,6 @@
 import { Button, Divider, Popover as MuiPopover, Stack, Typography } from '@mui/material'
-import React from 'react'
 import IconLogOut from '../../../assets/icons/IconLogOut'
 import { useNavigate } from 'react-router-dom'
-
 type PopOverProps ={
     open:boolean;
     id:any;

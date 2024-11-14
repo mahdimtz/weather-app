@@ -1,5 +1,4 @@
-import { Stack, Box, Typography } from "@mui/material";
-import React from "react";
+import { Stack, Typography } from "@mui/material";
 import { formatTime } from "../../../utils/helper/dateFormater";
 import { useTranslation } from "react-i18next";
 

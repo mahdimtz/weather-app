@@ -1,7 +1,5 @@
 import {
   Box,
-  Card,
-  CardContent,
   Chip,
   Container,
   Stack,
@@ -64,7 +62,7 @@ const Dashboard = () => {
   const days = [...new Array(14)];
 
   const { language } = useAppContext();
-  const { mode, setMode } = useColorScheme();
+  const {  setMode } = useColorScheme();
   const { t } = useTranslation();
 
   async function LocationAPI(cityID: string = "1") {
@@ -331,6 +329,7 @@ const Dashboard = () => {
               ? days.map((item, index) => {
                   return (
                     <WeatherCard
+                    key={item}
                       time={weather?.daily?.time[index]}
                       temp={weather?.daily?.temperature_2m_max[index]}
                       handleIcon={handleIcon(weather.daily.weather_code[index])}

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { getDayOfWeek } from "../../../utils/helper/dateFormater";
 import { useAppContext } from "../../../context/app/app-context";
 type WetherCardProps ={

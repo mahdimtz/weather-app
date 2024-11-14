@@ -1,6 +1,5 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashborad from "./pages/Dashboard";
+import { RouterProvider } from "react-router-dom";
+
 import "./App.css";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline, useMediaQuery } from "@mui/material";
@@ -16,12 +15,10 @@ function App() {
   const {themeMode } = useAppContext();
 
   const prefersDarkMode = useMediaQuery(`(prefers-color-scheme:${themeMode} )`);
-  console.log(themeMode);
   
-  console.log(prefersDarkMode);
   
   const theme = prefersDarkMode ? darkTheme : lightTheme;
-  console.log(theme);
+ 
   
 
   useEffect(() => {
