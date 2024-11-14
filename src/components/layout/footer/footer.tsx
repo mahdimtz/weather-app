@@ -8,7 +8,7 @@ const Footer = () => {
     <footer>
       <Stack
         sx={(theme) => ({
-          height: "106px",
+          height:{md:"106px",xs:"auto"},
           flexDirection: { md: "row", xs: "column" },
           alignItems: "center",
 
@@ -21,9 +21,9 @@ const Footer = () => {
           color: theme.palette.mode === "dark" ? "#fff" : "#003464",
         })}
       >
-        <Stack direction={"row"} spacing={"12px"} sx={{ alignItems: "center" }}>
+        <Stack direction={"row"} spacing={"12px"} sx={{ alignItems: "center",flexDirection:{md:"row",xs:"column"} }}>
           <img src="/images/logo.png" alt="" width={50} height={50} />
-          <Typography variant="caption" sx={{ fontSize: "12px" }}>
+          <Typography variant="caption" sx={{ fontSize: "12px",textAlign:{xs:"center"} }}>
             {t("footer.title")}
           </Typography>
         </Stack>
@@ -35,8 +35,9 @@ const Footer = () => {
             {t("footer.contact")}
           </Typography>
           <Typography
-            sx={{ fontSize: "14px", fontWeight: "400" }}
+            sx={{ fontSize: "14px", fontWeight: "400", display:{md:"block", xs:"none"}}}
             variant="caption"
+
           >
             {formatTime(new Date())}
           </Typography>

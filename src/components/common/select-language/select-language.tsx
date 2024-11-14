@@ -14,6 +14,7 @@ const SelectLanguage = ({selectedLanguage,handleChange,t,labelColor}:SelectLangu
 
   return (
      <FormControl variant="standard"     sx={{ 
+       
         width: "220px", 
         marginTop: "40px",
         '& .MuiInputLabel-root': {

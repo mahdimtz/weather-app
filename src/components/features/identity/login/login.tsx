@@ -6,6 +6,7 @@ import {
     TextField,
     Typography,
     useTheme,
+    Container,
   } from "@mui/material";
   import { useNavigate } from "react-router-dom";
   import { useTranslation } from "react-i18next";
@@ -37,10 +38,12 @@ import {
     return (
       <>
       
+      <Container maxWidth="md">
       <Stack
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
+        
         
         
         sx={(theme) => ({
@@ -51,11 +54,12 @@ import {
           color: theme.palette.mode === "dark" ? "#fff" : "#000",
           boxShadow: "0px 4px 8px 0px #00000040",
           borderRadius: "12px",
-          overflow:"hidden"
+          overflow:"hidden",
+          width:"100%",
           
         })}
       >
-          <Stack direction={"row"} justifyContent={"center"} sx={{ width: "50%" }}>
+          <Stack direction={"row"} justifyContent={"center"} sx={{width:"100%"}}>
           <Stack
             direction={"column"}
             sx={{
@@ -63,6 +67,7 @@ import {
               justifyContent: "center",
               alignItems: "center",
               padding: { md: "0", xs: "30px" },
+              
             }}
           >
             <Typography
@@ -84,7 +89,7 @@ import {
                 style: { direction: isRTL ? "rtl" : "ltr" },
               }}
               sx={{
-                width: "386px",
+                width: {md:"386px",xs:"100%"},
                 height: "56px",
                 marginBottom: "200px",
                 marginTop: "32px",
@@ -104,10 +109,13 @@ import {
   
             <Button
               variant="contained"
-              sx={{
-                width: { lg: "386px", md: "80%", xs: "50%" },
-                backgroundColor: "#2196F3",
-              }}
+             
+              sx={(theme) => ({
+                width: { lg: "386px", md: "80%", xs: "100%" },
+                backgroundColor:"#2196F3",
+                  
+                color: "#fff"
+              })}
               onClick={loginHandler}
             >
               {t("login.title")}
@@ -121,7 +129,9 @@ import {
       
        
   
-        <LanguageSelect
+       
+      </Container>
+      <LanguageSelect
           selectedLanguage={selectedLanguage}
           handleChange={handleChange}
           t={t}
