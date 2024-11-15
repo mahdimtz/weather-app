@@ -23,9 +23,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const initialState = {
   language: (localStorage.getItem("language") as Language) || "en",
-  themeMode: (localStorage.getItem("theme")as Theme) || "dark",
+  themeMode: (localStorage.getItem("theme") as Theme) || "dark",
 };
-console.log(localStorage);
 
 const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -63,9 +62,5 @@ const useAppContext = (): any => {
   if (context) {
     return useContext(AppContext);
   }
- 
-
-
-  
 };
 export { useAppContext, AppProvider };

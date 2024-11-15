@@ -22,7 +22,7 @@ function App() {
   
 
   useEffect(() => {
-    document.body.style.backgroundColor = theme.palette.mode === 'dark' ? '#121212' : '#F5F9FC';
+    document.body.style.backgroundColor = theme.palette.mode === 'dark' ? '#151D32' : '#F5F9FC';
   }, [theme]);
 
 

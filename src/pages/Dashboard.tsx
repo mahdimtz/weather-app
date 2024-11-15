@@ -11,140 +11,68 @@ import IconLocation from "../assets/icons/IconLocation";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
 import { formatTime, getDayOfWeek } from "../utils/helper/dateFormater";
-
 import Footer from "../components/layout/footer/footer";
 import WeatherCard from "../components/common/weather-card/weather-card";
 import { findExtreme } from "../utils/helper/findNumber";
-import weatherCode from "../constants/weatherCode";
-import Icon from "../components/icons/Icon";
 import { useAppContext } from "../context/app/app-context";
 import { useTranslation } from "react-i18next";
+import cities from "../constants/city";
+import { handleIconWeather } from "../utils/helper/weatherIcon";
+import { handleWeatherName } from "../utils/helper/weatherName";
+import { httpService } from "../core/http-service";
+
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 const Dashboard = () => {
-  interface Weather {
-    current: { temperature_2m: number; weather_code: number };
-    daily: {
-      time: string[]
-      weather_code: number[];
-      temperature_2m_max: number[];
-      temperature_2m_min: number[];
-
-    };
-  }
-  interface City {
-    id: string;
-    nameEn: string;
-    nameFa: string;
-  }
-  interface Location {
-    place_id: number;
-    licence: string;
-    osm_type: string;
-    osm_id: number;
-    boundingbox: string[];
-    lat: string;
-    lon: string;
-    display_name: string;
-    class: string;
-    type: string;
-    importance: number;
-  }
-
-  const cities: City[] = [
-    { id: "1", nameEn: "Tehran", nameFa: "تهران" },
-    { id: "2", nameEn: "Isfahan", nameFa: "اصفهان" },
-    { id: "3", nameEn: "Shiraz", nameFa: "شیراز" },
-    { id: "4", nameEn: "Tabriz", nameFa: "تبریز" },
-  ];
-  const [selectedCity, setSelectedCity] = useState<string>("1");
+  const [selectedCity, setSelectedCity] = useState<string>("Tehran");
   const [location, setLocation] = useState<Location>();
   const [weather, SetWeather] = useState<Weather>();
-  const days = [...new Array(14)];
 
   const { language } = useAppContext();
-  const {  setMode } = useColorScheme();
+  const { setMode } = useColorScheme();
   const { t } = useTranslation();
 
-  async function LocationAPI(cityID: string = "1") {
+  const getLocationInfo = async (location?: string) => {
     try {
-      const response = await fetch(
-        `https://geocode.maps.co/search?q=${
-          language === "fa"
-            ? cities.find((city) => city.id === cityID)?.nameFa
-            : cities.find((city) => city.id === cityID)?.nameEn
-        }&api_key=6730555eb21f3198362716hiza81838`
-      );
-      const data = await response.json();
-      if (data) setLocation(data[0]);
-    } catch (error: any) {
-      console.log(error.message);
+      const response = await httpService({
+        url: `https://geocode.maps.co/search?q=${
+          location || selectedCity
+        }&api_key=${API_KEY}`,
+      });
+
+      if (response?.data) setLocation(response?.data[0]);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCity(event.target.value);
-    LocationAPI(event.target.value);
+    getLocationInfo(event.target.value);
   };
 
-  const handleWeather = (code: number, lang: "en" | "fa") => {
-    let temp = weatherCode.filter((item) => {
-      return item[0] === code;
-    });
-    if (lang === "en") {
-      return temp[0][1];
-    } else if (lang === "fa") {
-      return temp[0][2];
+  const getWeatherInfo = async () => {
+    try {
+      const response = await httpService({
+        url: `https://api.open-meteo.com/v1/forecast?latitude=${location?.lat}&longitude=${location?.lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=14`,
+      });
+      if (response?.data) SetWeather(response?.data);
+    } catch (error) {
+      console.log(error);
     }
   };
-  async function WeatherAPI() {
-    try {
-      const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${location?.lat}&longitude=${location?.lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=14`
-      );
-      const data = await response.json();
-      if (data) SetWeather(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
+
   useEffect(() => {
-    LocationAPI();
+    getLocationInfo();
   }, []);
+
   useEffect(() => {
-    if (location) WeatherAPI();
+    if (location) getWeatherInfo();
   }, [location]);
+
   const chartsParams = {
     margin: { bottom: 20, left: 25, right: 5 },
     height: 234,
-  };
-  const handleIcon = (code: number, width?: string, height?: string) => {
-    let temp = weatherCode.filter((item) => {
-      return item[0] === code;
-    });
-    switch (temp[0][3]) {
-      case "FaSnowflake":
-        return (
-          <Icon src="/imageIcon/Rain cloud.png" width={width} height={height} />
-        );
-      case "FaSun":
-        return <Icon src="/imageIcon/sun.png" width={width} height={height} />;
-
-      case "FaCloudRain":
-        return (
-          <Icon src="/imageIcon/Rain cloud.png" width={width} height={height} />
-        );
-      case "FaCloud":
-        return (
-          <Icon src="/imageIcon/cloud.png" width={width} height={height} />
-        );
-      case "FaWind":
-        return (
-          <Icon src="/imageIcon/storm.png" width={width} height={height} />
-        );
-
-      default:
-        break;
-    }
   };
 
   return (
@@ -202,7 +130,7 @@ const Dashboard = () => {
                     marginTop: "16px",
                   }}
                 >
-                  {getDayOfWeek(weather?.daily.time[0], language, true)}
+                  {getDayOfWeek(weather?.daily?.time[0]!, language, true)}
                 </Typography>
                 <Box
                   sx={{
@@ -253,10 +181,14 @@ const Dashboard = () => {
                 }}
               >
                 {weather &&
-                  handleIcon(weather.daily.weather_code[0], "194px", "110px")}
+                  handleIconWeather(
+                    weather.daily.weather_code[0],
+                    "194px",
+                    "110px"
+                  )}
                 <Typography variant="caption" sx={{ fontSize: "32px" }}>
                   {weather &&
-                    handleWeather(weather?.current?.weather_code, language)}
+                    handleWeatherName(weather?.current?.weather_code, language)}
                 </Typography>
                 <Typography variant="caption" sx={{ fontSize: "14px" }}>
                   {weather?.current?.temperature_2m}{" "}
@@ -325,19 +257,18 @@ const Dashboard = () => {
             {t("dashboard.title")}
           </Typography>
           <Stack direction={"row"} sx={{ gap: "18px" }}>
-            {weather
-              ? days.map((item, index) => {
-                  return (
-                    <WeatherCard
-                    key={item}
-                      time={weather?.daily?.time[index]}
-                      temp={weather?.daily?.temperature_2m_max[index]}
-                      handleIcon={handleIcon(weather.daily.weather_code[index])}
-                      
-                    />
-                  );
-                })
-              : null}
+            {weather?.daily?.time?.map((item, index) => {
+              return (
+                <WeatherCard
+                  key={item}
+                  time={item}
+                  temp={weather?.daily?.temperature_2m_max[index]}
+                  handleIcon={handleIconWeather(
+                    weather.daily.weather_code[index]
+                  )}
+                />
+              );
+            })}
           </Stack>
         </Box>
       </Container>
