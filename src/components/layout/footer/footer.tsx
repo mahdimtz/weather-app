@@ -70,9 +70,8 @@ const Footer = () => {
           direction={{ md: "row", xs: "column" }}
           spacing={{ md: 4, xs: 1 }}
           alignItems="center"
-          sx={{ marginTop: { xs: "12px", md: 0 } }}
+          sx={{ marginTop: { xs: "12px", md: 0,gap:"20px" } }}
         >
-          {/* ایمیل */}
           <Box sx={wrapperHover}>
             <HiOutlineMail size={20} />
             <Link
@@ -84,7 +83,6 @@ const Footer = () => {
             </Link>
           </Box>
 
-          {/* گیت‌هاب */}
           <Box sx={wrapperHover}>
             <FaGithub size={20} />
             <Link
