@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import Header from "../components/layout/header/header";
 import IconLocation from "../assets/icons/IconLocation";
-import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
 import { formatTime, getDayOfWeek } from "../utils/helper/dateFormater";
 import Footer from "../components/layout/footer/footer";
@@ -16,7 +15,6 @@ import WeatherCard from "../components/common/weather-card/weather-card";
 import { findExtreme } from "../utils/helper/findNumber";
 import { useAppContext } from "../context/app/app-context";
 import { useTranslation } from "react-i18next";
-import cities from "../constants/city";
 import { handleIconWeather } from "../utils/helper/weatherIcon";
 import { handleWeatherName } from "../utils/helper/weatherName";
 import { httpService } from "../core/http-service";
@@ -86,7 +84,6 @@ const Dashboard = () => {
         language={language}
         handleCityChange={handleCityChange}
         selectedCity={selectedCity}
-        cities={cities}
         setMode={setMode}
       />
       <Container maxWidth={"xl"} sx={{ marginTop: "28px" }}>

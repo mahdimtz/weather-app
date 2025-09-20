@@ -11,14 +11,14 @@ const Header = ({
   language,
   handleCityChange,
   selectedCity,
-  setMode,
+  
 }: {
   language: "en" | "fa";
   handleCityChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedCity: string;
   setMode: any;
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const theme = useTheme();
   const labelColor = theme.palette.mode === "dark" ? "white" : "#AFBCC4";
   const { changeTheme, changeLanguage } = useAppContext();
