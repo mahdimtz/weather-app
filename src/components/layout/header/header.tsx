@@ -1,5 +1,4 @@
 import { Autocomplete, IconButton, Stack, TextField, Typography, useTheme } from "@mui/material";
-import SettingsIcon from '@mui/icons-material/Settings';
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../../context/app/app-context";
@@ -80,7 +79,6 @@ const Header = ({
           color: theme.palette.mode === "dark" ? "#fff" : "#003464",
         })}
       >
-        {/* لوگو و عنوان */}
         <Box
           sx={{
             display: { xs: "none", sm: "flex" },
