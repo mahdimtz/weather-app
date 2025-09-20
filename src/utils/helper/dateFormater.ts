@@ -1,16 +1,21 @@
 type Language = "en" | "fa";
 
-function formatTime(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  };
-  return date.toLocaleString("en-US", options).replace(",", "");
+function formatTime(date: Date, language: Language = "en"): string {
+  if (language === "fa") {
+    const day = date.getDate();
+    const month = date.getMonth() + 1; 
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`; 
+  } else {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`; 
+  }
 }
+
 
 function getCurrentWeekday(): string {
   const currentDate = new Date();
@@ -59,3 +64,6 @@ function getDayOfWeek(
   return language === "en" ? daysEn[dayIndex] : daysFa[dayIndex];
 }
 export { formatTime, getCurrentWeekday, getDayOfWeek };
+
+
+

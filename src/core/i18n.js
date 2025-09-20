@@ -10,6 +10,10 @@ const resources = {
         label: "language",
         languageFa: "persian",
         languageEn: "english",
+        title: "login",
+        placeholder: "user name",
+        errorRequired: "user name is required",
+        welcome: "welcome",
       },
       header:{
         title:"Weather Dashboard",
@@ -25,8 +29,8 @@ const resources = {
         }
       },
       footer:{
-        title:"All rights of this site are reserved for Nadin Sadr Aria Engineering Company.",
-        contact:"contact us : info@nadin.ir"
+        title:"developer: mahdi montazeri",
+        contact:"contact me : mahdi.montazeri.dev@gmail.com"
       },
       dashboard:{
         title:"2 weeks Forecast"
@@ -41,6 +45,10 @@ const resources = {
         label: "زبان",
         languageFa: "فارسی",
         languageEn: "انگلیسی",
+        title: "ورود",
+        placeholder: "نام کاربری",
+        errorRequired: "نام اجباری میباشد",
+        welcome: "خوش آمدید",
       },
       header:{
         title:"داشبورد آب و هوا",
@@ -56,8 +64,8 @@ const resources = {
         }
       },
       footer:{
-        title:"همه حقوق این سایت برای شرکت مهندسی نادین صدر آریا محفوظ است.",
-        contact:"تماس با ما : info@nadin.ir"
+        title:"توسعه دهنده: محمد مهدی منتظری",
+        contact:"تماس با ما : mahdi.montazeri.dev@gmail.com"
       },
       dashboard:{
         title:"پیش بینی دو هفته"

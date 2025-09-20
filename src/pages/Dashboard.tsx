@@ -20,6 +20,8 @@ import cities from "../constants/city";
 import { handleIconWeather } from "../utils/helper/weatherIcon";
 import { handleWeatherName } from "../utils/helper/weatherName";
 import { httpService } from "../core/http-service";
+import MainWeatherSkeleton from "../components/common/skeleton/main-weather-card-skeleton";
+import MonthlyTempChart from "../components/common/monthly-temp-chart";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -27,6 +29,7 @@ const Dashboard = () => {
   const [selectedCity, setSelectedCity] = useState<string>("Tehran");
   const [location, setLocation] = useState<Location>();
   const [weather, SetWeather] = useState<Weather>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { language } = useAppContext();
   const { setMode } = useColorScheme();
@@ -47,8 +50,9 @@ const Dashboard = () => {
   };
 
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsLoading(true);
     setSelectedCity(event.target.value);
-    getLocationInfo(event.target.value);
+    getLocationInfo(event.target.value).finally(() => setIsLoading(false));
   };
 
   const getWeatherInfo = async () => {
@@ -63,17 +67,18 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getLocationInfo();
+    setIsLoading(true);
+    getLocationInfo().finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
-    if (location) getWeatherInfo();
+    if (location) {
+      setIsLoading(true);
+      getWeatherInfo().finally(() => setIsLoading(false));
+    }
   }, [location]);
 
-  const chartsParams = {
-    margin: { bottom: 20, left: 25, right: 5 },
-    height: 234,
-  };
+  
 
   return (
     <>
@@ -86,7 +91,11 @@ const Dashboard = () => {
       />
       <Container maxWidth={"xl"} sx={{ marginTop: "28px" }}>
         <Stack sx={{ flexDirection: { md: "row", xs: "col" }, gap: "41px" }}>
-          <Stack
+          
+           { isLoading || !weather ? 
+              <MainWeatherSkeleton />
+              :
+              <Stack
             sx={(theme) => ({
               borderRadius: "24px",
               width: { xl: "607px", md: "50%" },
@@ -144,19 +153,19 @@ const Dashboard = () => {
 
                 <Typography
                   sx={{
-                    fontSize: "40px",
-                    fontWeight: "500",
+                    fontSize: "25px",
+                    fontWeight: "700",
                     lineHeight: "46.88px",
                     marginTop: "16px",
                   }}
                   variant="caption"
                 >
                   {weather?.current?.temperature_2m}
-                  <span>&#8451;</span>
+                  <span> &#8451;</span>
                 </Typography>
                 <Box
                   sx={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: "400",
                     lineHeight: "16.41px",
                   }}
@@ -167,8 +176,8 @@ const Dashboard = () => {
                       findExtreme(weather.daily.temperature_2m_max, "max")}
                   </span>
                   <span>
-                    {" "}
-                    {language === "en" ? "Low" : "کمینه"}:
+                    
+                    {language === "en" ? "Low" : " کمینه"}:
                     {weather &&
                       findExtreme(weather.daily.temperature_2m_min, "min")}
                   </span>
@@ -192,11 +201,15 @@ const Dashboard = () => {
                 </Typography>
                 <Typography variant="caption" sx={{ fontSize: "14px" }}>
                   {weather?.current?.temperature_2m}{" "}
-                  {language === "en" ? "Feels Like" : "درجه احساس می شود"}
+                  {language === "en" ? " Feels Like" : " درجه احساس می شود"}
                 </Typography>
               </Box>
             </Box>
           </Stack>
+            
+            }
+          
+          
 
           <Box
             sx={(theme) => ({
@@ -221,14 +234,7 @@ const Dashboard = () => {
                 ? "Average Monthly Temprature"
                 : "میانگین دمای ماهانه"}
             </Typography>
-            <LineChart
-              {...chartsParams}
-              series={[
-                {
-                  data: [15, 15, 22, 19, 13],
-                },
-              ]}
-            />
+            <MonthlyTempChart latitude={location?.lat} longitude={location?.lon} locale={language} />
           </Box>
         </Stack>
         <Box
@@ -257,18 +263,20 @@ const Dashboard = () => {
             {t("dashboard.title")}
           </Typography>
           <Stack direction={"row"} sx={{ gap: "18px" }}>
-            {weather?.daily?.time?.map((item, index) => {
-              return (
-                <WeatherCard
-                  key={item}
-                  time={item}
-                  temp={weather?.daily?.temperature_2m_max[index]}
-                  handleIcon={handleIconWeather(
-                    weather.daily.weather_code[index]
-                  )}
-                />
-              );
-            })}
+            {isLoading || !weather
+              ? Array.from({ length: 14 }).map((_, index) => (
+                  <WeatherCard key={index} loading={true} />
+                ))
+              : weather?.daily?.time?.map((item, index) => (
+                  <WeatherCard
+                    key={item}
+                    time={item}
+                    temp={weather?.daily?.temperature_2m_max[index]}
+                    handleIcon={handleIconWeather(
+                      weather.daily.weather_code[index]
+                    )}
+                  />
+                ))}
           </Stack>
         </Box>
       </Container>

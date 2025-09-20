@@ -3,7 +3,7 @@ import { formatTime } from "../../../utils/helper/dateFormater";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t,i18n  } = useTranslation();
   return (
     <footer>
       <Stack
@@ -22,24 +22,23 @@ const Footer = () => {
         })}
       >
         <Stack direction={"row"} spacing={"12px"} sx={{ alignItems: "center",flexDirection:{md:"row",xs:"column"} }}>
-          <img src="/images/logo.png" alt="" width={50} height={50} />
-          <Typography variant="caption" sx={{ fontSize: "12px",textAlign:{xs:"center"} }}>
+          <Typography variant="caption" sx={{ fontSize: "18px",textAlign:{xs:"center"} }}>
             {t("footer.title")}
           </Typography>
         </Stack>
         <Stack direction={"row"} sx={{ alignItems: "center", gap: "40px" }}>
           <Typography
-            sx={{ fontSize: "14px", fontWeight: "400" }}
+            sx={{ fontSize: "16px", fontWeight: "400" }}
             variant="caption"
           >
             {t("footer.contact")}
           </Typography>
           <Typography
-            sx={{ fontSize: "14px", fontWeight: "400", display:{md:"block", xs:"none"}}}
+            sx={{ fontSize: "15px", fontWeight: "400", display:{md:"block", xs:"none"}}}
             variant="caption"
 
           >
-            {formatTime(new Date())}
+            {formatTime(new Date(), i18n.language as "en" | "fa")}
           </Typography>
         </Stack>
       </Stack>

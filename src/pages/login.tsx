@@ -7,6 +7,8 @@ import {
   Typography,
   useTheme,
   Container,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -15,6 +17,9 @@ import { useAppContext } from "../context/app/app-context";
 import LanguageSelect from "../components/common/select-language";
 
 const Login = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const { language, changeLanguage } = useAppContext();
   const theme = useTheme();
@@ -26,7 +31,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const loginHandler = () => {
-    navigate("/dashboard");
+    if (!username.trim()) {
+      setError(t("login.errorRequired"));
+      return;
+    }
+    setError("");
+    setShowToast(true);
+    setTimeout(() => {
+      navigate("/dashboard", { state: { username } });
+    }, 2000); // Wait for toast to be visible before navigating
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -89,6 +102,13 @@ const Login = () => {
                     style: { color: labelColor },
                     shrink: true,
                   }}
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    if (error) setError("");
+                  }}
+                  error={!!error}
+                  helperText={error}
                   InputProps={{
                     style: { direction: isRTL ? "rtl" : "ltr" },
                   }}
@@ -136,6 +156,20 @@ const Login = () => {
           labelColor={labelColor}
         />
       </Stack>
+      <Snackbar
+        open={showToast}
+        autoHideDuration={2000}
+        onClose={() => setShowToast(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={() => setShowToast(false)}
+          severity="success"
+          sx={{ width: '100%', backgroundColor: '#f1f8e9' }}
+        >
+          {`${t("login.welcome")} ${username}!`}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -1,12 +1,15 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Skeleton } from "@mui/material";
 import { getDayOfWeek } from "../../../utils/helper/dateFormater";
 import { useAppContext } from "../../../context/app/app-context";
-type WetherCardProps ={
-  time:string;
-  temp: number
-  handleIcon:any
-}
-const WeatherCard = ({ time, temp, handleIcon }:WetherCardProps) => {
+
+type WetherCardProps = {
+  time?: string;
+  temp?: number;
+  handleIcon?: any;
+  loading?: boolean;
+};
+
+const WeatherCard = ({ time, temp, handleIcon, loading }: WetherCardProps) => {
   const { language } = useAppContext();
 
   return (
@@ -33,18 +36,27 @@ const WeatherCard = ({ time, temp, handleIcon }:WetherCardProps) => {
           padding: "45.5px 15px",
         }}
       >
-        <Typography sx={{ fontSize: "14px" }}>
-          {getDayOfWeek(time, language)}
-        </Typography>
-        {handleIcon}
-
-        <Typography
-          sx={{ fontSize: "18px", fontWeight: "500" }}
-          variant="caption"
-        >
-          {temp}
-          <span>&#8451;</span>
-        </Typography>
+        {loading ? (
+          <>
+            <Skeleton variant="text" width={60} height={20} />
+            <Skeleton variant="circular" width={50} height={50} />
+            <Skeleton variant="text" width={30} height={20} />
+          </>
+        ) : (
+          <>
+            <Typography sx={{ fontSize: "14px" }}>
+              {getDayOfWeek(time!, language)}
+            </Typography>
+            {handleIcon}
+            <Typography
+              sx={{ fontSize: "18px", fontWeight: "500" }}
+              variant="caption"
+            >
+              {temp}
+              <span>&#8451;</span>
+            </Typography>
+          </>
+        )}
       </CardContent>
     </Card>
   );
