@@ -12,7 +12,7 @@ import {
 type Props = {
   latitude?: number | string;
   longitude?: number | string;
-  days?: number; // default 30
+  days?: number;   
   locale?: "fa" | "en";
 };
 

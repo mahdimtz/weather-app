@@ -1,10 +1,8 @@
 import { Stack, Typography, useTheme, Link, Box, Avatar } from "@mui/material";
 import { HiOutlineMail } from "react-icons/hi";
 import { FaGithub } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-  const { t } = useTranslation();
   const theme = useTheme();
 
   const wrapperHover = {
@@ -53,7 +51,6 @@ const Footer = () => {
             : "0px -2px 10px rgba(0,0,0,0.1)",
         }}
       >
-        {/* بخش آواتار + اسم با افکت */}
         <Box sx={avatarNameHover}>
           <Avatar
             src="/images/programmer-avatar.png"
@@ -69,7 +66,6 @@ const Footer = () => {
           </Typography>
         </Box>
 
-        {/* تماس و شبکه اجتماعی */}
         <Stack
           direction={{ md: "row", xs: "column" }}
           spacing={{ md: 4, xs: 1 }}

@@ -8,7 +8,6 @@ import {
 import IconLogOut from "../../../assets/icons/IconLogOut";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../context/app/app-context";
-import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 type PopOverProps = {
   open: boolean;

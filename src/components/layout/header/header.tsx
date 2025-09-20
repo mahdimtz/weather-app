@@ -23,7 +23,7 @@ const Header = ({
   const { changeTheme, changeLanguage } = useAppContext();
 
   const [showPopOver, setShowPopOver] = useState<HTMLButtonElement | null>(null);
-  const [animateHeader, setAnimateHeader] = useState(false); // state برای افکت ورودی
+  const [animateHeader, setAnimateHeader] = useState(false);    
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setShowPopOver(event.currentTarget);
   const handleClose = () => setShowPopOver(null);
@@ -34,7 +34,7 @@ const Header = ({
   const changeLanguageHandler = (lang: "en" | "fa") => changeLanguage(lang);
 
   useEffect(() => {
-    setAnimateHeader(true); // فعال شدن انیمیشن بعد از mount
+    setAnimateHeader(true);       
     if ("geolocation" in navigator && !selectedCity) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -70,7 +70,7 @@ const Header = ({
       style={{
         transform: animateHeader ? "translateY(0)" : "translateY(-100px)",
         opacity: animateHeader ? 1 : 0,
-        transition: "all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)", // bounce effect
+        transition: "all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)", 
       }}
     >
       <Stack
