@@ -145,7 +145,7 @@ const Dashboard = () => {
                     marginTop: "4px",
                   }}
                 >
-                  <span>{formatTime(new Date())}</span>
+                  <span>{formatTime(new Date(), language)}</span>
                 </Box>
 
                 <Typography
@@ -165,6 +165,7 @@ const Dashboard = () => {
                     fontSize: "16px",
                     fontWeight: "400",
                     lineHeight: "16.41px",
+                    
                   }}
                 >
                   <span>
@@ -172,6 +173,7 @@ const Dashboard = () => {
                     {weather &&
                       findExtreme(weather.daily.temperature_2m_max, "max")}
                   </span>
+                  
                   <span>
                     
                     {language === "en" ? "Low" : " کمینه"}:
@@ -235,20 +237,42 @@ const Dashboard = () => {
           </Box>
         </Stack>
         <Box
-          sx={(theme) => ({
-            marginTop: "28px",
-            padding: "24px 28.41px 26px 28.41px",
-            marginBottom: "102px",
-            borderRadius: "24px",
-            background: "#E1E9EE",
-            boxShadow: " 0px 4px 10px 0px #00000026",
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? theme.palette.secondary.dark
-                : theme.palette.primary.main,
-            color: theme.palette.mode === "dark" ? "#fff" : "#000",
-            overflowX: "scroll",
-          })}
+         sx={(theme) => ({
+          marginTop: "28px",
+          padding: "24px 28.41px 26px 28.41px",
+          marginBottom: "102px",
+          borderRadius: "24px",
+          boxShadow: " 0px 4px 10px 0px #00000026",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.secondary.dark
+              : theme.palette.primary.main,
+          color: theme.palette.mode === "dark" ? "#fff" : "#000",
+        
+          overflowX: "auto",            
+        
+   
+          "&::-webkit-scrollbar": {
+            height: "8px",     
+          },
+          // استایل مسیر اسکرول‌بار
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: theme.palette.mode === 'dark' 
+              ? "rgba(255, 255, 255, 0.1)"      
+              : "#f1f1f1",                     
+            borderRadius: "10px",
+          },
+             
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: theme.palette.mode === 'dark' 
+              ? "#888"        
+              : "#a9a9a9",  
+            borderRadius: "10px",
+            "&:hover": {
+              backgroundColor: theme.palette.mode === 'dark' ? "#555" : "#7d7d7d",
+            }
+          }
+        })}
         >
           <Typography
             variant="caption"
@@ -260,20 +284,29 @@ const Dashboard = () => {
             {t("dashboard.title")}
           </Typography>
           <Stack direction={"row"} sx={{ gap: "18px" }}>
-            {isLoading || !weather
+          {isLoading || !weather
               ? Array.from({ length: 14 }).map((_, index) => (
                   <WeatherCard key={index} loading={true} />
                 ))
-              : weather?.daily?.time?.map((item, index) => (
-                  <WeatherCard
-                    key={item}
-                    time={item}
-                    temp={weather?.daily?.temperature_2m_max[index]}
-                    handleIcon={handleIconWeather(
-                      weather.daily.weather_code[index]
-                    )}
-                  />
-                ))}
+              : weather?.daily?.time?.map((item: string, index: number) => {
+                  
+                  const simpleDayWeather = {
+                    temp_max: weather.daily.temperature_2m_max[index],
+                    temp_min: weather.daily.temperature_2m_min[index],
+                    weather_code: weather.daily.weather_code[index],
+                  };
+
+                  return (
+                    <WeatherCard
+                      key={item}
+                      time={item}
+                      temp={simpleDayWeather.temp_max}
+                      handleIcon={handleIconWeather(simpleDayWeather.weather_code)}
+                      location={location} 
+                      dayWeather={simpleDayWeather}
+                    />
+                  );
+                })}
           </Stack>
         </Box>
       </Container>

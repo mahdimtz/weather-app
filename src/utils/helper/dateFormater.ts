@@ -1,18 +1,19 @@
 type Language = "en" | "fa";
 
-function formatTime(date: Date, language: Language = "en"): string {
+function formatTime(date: Date, language: "fa" | "en" = "en"): string {
   if (language === "fa") {
-    const day = date.getDate();
-    const month = date.getMonth() + 1; 
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`; 
+    // تقویم جلالی واقعی + اعداد فارسی
+    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(date);
   } else {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    return `${month}/${day}/${year}`; 
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(date);
   }
 }
 

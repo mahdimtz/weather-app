@@ -9,7 +9,7 @@ import IconLogOut from "../../../assets/icons/IconLogOut";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../context/app/app-context";
 import { grey } from "@mui/material/colors";
-
+import { useTheme } from "@mui/material/styles";
 type PopOverProps = {
   open: boolean;
   id: any;
@@ -30,6 +30,7 @@ const PopOver = ({
   showPopOver,
 }: PopOverProps) => {
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const { language, themeMode } = useAppContext();
   return (
@@ -51,101 +52,174 @@ const PopOver = ({
         <Typography variant="caption" marginBottom={"6px"} fontSize={"16px"}>
           {t("header.popover.mode")}
         </Typography>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} sx={{ gap: "12px" }}>
           <Button
-            variant="outlined"
-            onClick={() => onChangeTheme("dark")}
+            variant={themeMode === "dark" ? "contained" : "outlined"}
+            onClick={() =>{ 
+              onChangeTheme("dark")
+              handleClose()
+            }}
             sx={(theme) => ({
               width: "94px",
-              color:
-                themeMode === "dark"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
-              borderColor:
-                themeMode === "dark"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
+              borderRadius: "10px",
+              textTransform: "none",
+              fontSize: "14px",
+              fontWeight: 500,
+              ...(themeMode === "dark"
+                ? {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }
+                : {
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
+                  }),
             })}
           >
             {t("header.popover.themeDarkBtn")}
           </Button>
+
           <Button
-            variant="outlined"
-            onClick={() => onChangeTheme("light")}
+            variant={themeMode === "light" ? "contained" : "outlined"}
+            onClick={() =>{ 
+              onChangeTheme("light")
+              handleClose()
+            }}
             sx={(theme) => ({
               width: "94px",
-              color:
-                themeMode === "light"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
-              borderColor:
-                themeMode === "light"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
+              borderRadius: "10px",
+              textTransform: "none",
+              fontSize: "14px",
+              fontWeight: 500,
+              ...(themeMode === "light"
+                ? {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }
+                : {
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
+                  }),
             })}
           >
             {t("header.popover.themeLightBtn")}
           </Button>
         </Stack>
+
         <Divider sx={{ margin: "10px 0" }} />
         <Typography variant="caption" marginBottom={"6px"} fontSize={"16px"}>
           {t("header.popover.language")}
         </Typography>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} sx={{ gap: "12px" }}>
           <Button
-            variant="outlined"
-            onClick={() => onChangeLanguage("en")}
+            variant={language === "en" ? "contained" : "outlined"}
+            onClick={() =>{
+               onChangeLanguage("en")
+               handleClose()
+              }}
             sx={(theme) => ({
               width: "94px",
-              color:
-                language === "en"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
-              borderColor:
-                language === "en"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
+              borderRadius: "10px",
+              textTransform: "none",
+              fontSize: "14px",
+              fontWeight: 500,
+              ...(language === "en"
+                ? {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }
+                : {
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
+                  }),
             })}
           >
             {t("header.popover.languageEnBtn")}
           </Button>
+
           <Button
-            variant="outlined"
-            onClick={() => onChangeLanguage("fa")}
+            variant={language === "fa" ? "contained" : "outlined"}
+            onClick={() =>{
+              onChangeLanguage("fa")
+              handleClose()
+             }}
             sx={(theme) => ({
               width: "94px",
-              color:
-                language === "fa"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
-              borderColor:
-                language === "fa"
-                  ? theme.palette.action.active
-                  : theme.palette.action.disabled,
+              borderRadius: "10px",
+              textTransform: "none",
+              fontSize: "14px",
+              fontWeight: 500,
+              ...(language === "fa"
+                ? {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.dark,
+                    },
+                  }
+                : {
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                    "&:hover": {
+                      backgroundColor: theme.palette.action.hover,
+                    },
+                  }),
             })}
           >
             {t("header.popover.languageFaBtn")}
           </Button>
         </Stack>
+
         <Divider sx={{ margin: "10px 0" }} />
 
         <Button
-          variant="text"
-          sx={(theme) => ({
-            justifyContent: "end",
-            gap: "10px",
-            color:
-              theme.palette.mode === "dark"
-                ? theme.palette.text.primary
-                : theme.palette.grey[900],
-          })}
-          onClick={() => navigate("/")}
-          endIcon={
-            <IconLogOut color={themeMode === "dark" ? grey[50] : grey[900]} />
-          }
-        >
-          {t("header.popover.exitBtn")}{" "}
-        </Button>
+      variant="text"
+      onClick={() => navigate("/")}
+      sx={{
+        justifyContent: "flex-end",
+        gap: "8px",
+        padding: "6px 12px",
+        borderRadius: "8px",
+        textTransform: "none",
+        fontSize: "14px",
+        fontWeight: 500,
+        color: theme.palette.primary.main,      
+        "&:hover": {
+          backgroundColor: theme.palette.action.hover,     
+          color: theme.palette.primary.main,     
+          "& .logout-icon": {
+            color: theme.palette.primary.main,     
+          },
+        },
+      }}
+      endIcon={
+        <IconLogOut
+          color={theme.palette.primary.main}    
+        />
+      }
+    >
+      {t("header.popover.exitBtn")}
+    </Button>
+
+
       </Stack>
     </MuiPopover>
   );

@@ -1,45 +1,106 @@
-import { Stack, Typography } from "@mui/material";
-import { formatTime } from "../../../utils/helper/dateFormater";
+import { Stack, Typography, useTheme, Link, Box, Avatar } from "@mui/material";
+import { HiOutlineMail } from "react-icons/hi";
+import { FaGithub } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-  const { t,i18n  } = useTranslation();
+  const { t } = useTranslation();
+  const theme = useTheme();
+
+  const wrapperHover = {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      transform: "scale(1.1)",
+      color: theme.palette.mode === "dark" ? "#4FC3F7" : "#FFD700",
+    },
+  };
+
+  const avatarNameHover = {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    cursor: "pointer",
+    transition: "all 0.4s ease",
+    "&:hover": {
+      transform: "scale(1.1) rotate(-5deg)",
+      boxShadow: theme.palette.mode === "dark"
+        ? "0 4px 20px rgba(79, 195, 247, 0.5)"
+        : "0 4px 20px rgba(255, 215, 0, 0.5)",
+    },
+    "&:hover .nameText": {
+      color: theme.palette.mode === "dark" ? "#4FC3F7" : "#FFD700",
+      transform: "scale(1.05)",
+    },
+  };
+
   return (
     <footer>
       <Stack
-        sx={(theme) => ({
-          height:{md:"106px",xs:"auto"},
+        sx={{
           flexDirection: { md: "row", xs: "column" },
           alignItems: "center",
-
           justifyContent: "space-between",
           padding: "28px 24px",
           backgroundColor:
-            theme.palette.mode === "dark"
-              ? theme.palette.secondary.contrastText
-              : theme.palette.secondary.contrastText,
-          color: theme.palette.mode === "dark" ? "#fff" : "#003464",
-        })}
+            theme.palette.mode === "dark" ? "#0D1B2A" : "#10598E",
+          color: theme.palette.mode === "dark" ? "#FFFFFF" : "#F3FAFE",
+          boxShadow: theme.palette.mode === "dark" 
+            ? "0px -2px 10px rgba(0,0,0,0.5)" 
+            : "0px -2px 10px rgba(0,0,0,0.1)",
+        }}
       >
-        <Stack direction={"row"} spacing={"12px"} sx={{ alignItems: "center",flexDirection:{md:"row",xs:"column"} }}>
-          <Typography variant="caption" sx={{ fontSize: "18px",textAlign:{xs:"center"} }}>
-            {t("footer.title")}
-          </Typography>
-        </Stack>
-        <Stack direction={"row"} sx={{ alignItems: "center", gap: "40px" }}>
+        {/* بخش آواتار + اسم با افکت */}
+        <Box sx={avatarNameHover}>
+          <Avatar
+            src="/images/programmer-avatar.png"
+            alt="Mahdi Montazeri"
+            sx={{ width: 48, height: 48 }}
+          />
           <Typography
-            sx={{ fontSize: "16px", fontWeight: "400" }}
-            variant="caption"
+            className="nameText"
+            variant="h6"
+            sx={{ fontSize: "18px", fontWeight: 500, transition: "all 0.3s ease" }}
           >
-            {t("footer.contact")}
+            Mahdi Montazeri
           </Typography>
-          <Typography
-            sx={{ fontSize: "15px", fontWeight: "400", display:{md:"block", xs:"none"}}}
-            variant="caption"
+        </Box>
 
-          >
-            {formatTime(new Date(), i18n.language as "en" | "fa")}
-          </Typography>
+        {/* تماس و شبکه اجتماعی */}
+        <Stack
+          direction={{ md: "row", xs: "column" }}
+          spacing={{ md: 4, xs: 1 }}
+          alignItems="center"
+          sx={{ marginTop: { xs: "12px", md: 0 } }}
+        >
+          {/* ایمیل */}
+          <Box sx={wrapperHover}>
+            <HiOutlineMail size={20} />
+            <Link
+              href="mailto:mahdi.montazeri.dev@gmail.com"
+              underline="hover"
+              sx={{ fontSize: "16px", color: "inherit" }}
+            >
+              mahdi.montazeri.dev@gmail.com
+            </Link>
+          </Box>
+
+          {/* گیت‌هاب */}
+          <Box sx={wrapperHover}>
+            <FaGithub size={20} />
+            <Link
+              href="https://github.com/mahdimtz"
+              target="_blank"
+              rel="noopener"
+              underline="hover"
+              sx={{ fontSize: "16px", color: "inherit" }}
+            >
+              @mahdimtz
+            </Link>
+          </Box>
         </Stack>
       </Stack>
     </footer>

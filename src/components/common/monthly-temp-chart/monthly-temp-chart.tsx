@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Skeleton, Typography } from "@mui/material";
-import { LineChart } from "@mui/x-charts";
+import { Box, Typography, useTheme, CircularProgress, Stack } from "@mui/material";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 type Props = {
   latitude?: number | string;
@@ -27,20 +34,17 @@ const MonthlyTempChart: React.FC<Props> = ({
   days = 30,
   locale = "fa",
 }) => {
-  const [dailyTemps, setDailyTemps] = useState<number[] | null>(null);
-  const [dailyDates, setDailyDates] = useState<string[] | null>(null);
+  const [dailyData, setDailyData] = useState<{ day: string; temp: number }[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-  
-  // Helper to format date to just the day number for better readability
-  const getDay = (dateString: string, localeStr: string) => {
-      const date = new Date(dateString);
-      // Use fa-IR-u-nu-latn to ensure latin numbers for Persian dates
-      const formatLocale = localeStr === 'fa' ? 'fa-IR-u-nu-latn' : 'en-US';
-      return date.toLocaleDateString(formatLocale, { day: 'numeric' });
-  };
+  const theme = useTheme();
 
+  const getDay = (dateString: string, localeStr: string) => {
+    const date = new Date(dateString);
+    const formatLocale = localeStr === 'fa' ? 'fa-IR-u-nu-latn' : 'en-US';
+    return date.toLocaleDateString(formatLocale, { day: 'numeric' });
+  };
 
   useEffect(() => {
     const lat = toNumber(latitude);
@@ -48,8 +52,7 @@ const MonthlyTempChart: React.FC<Props> = ({
 
     if (!validLat(lat) || !validLon(lon)) {
       setError(locale === "fa" ? "مختصات نامعتبر" : "Invalid coordinates");
-      setDailyTemps(null);
-      setDailyDates(null);
+      setDailyData(null);
       return;
     }
 
@@ -60,8 +63,7 @@ const MonthlyTempChart: React.FC<Props> = ({
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
-      setDailyTemps(null);
-      setDailyDates(null);
+      setDailyData(null);
 
       try {
         const end = new Date();
@@ -81,38 +83,30 @@ const MonthlyTempChart: React.FC<Props> = ({
 
         const json = await res.json();
         const daily = json?.daily;
-        if (
-          !daily ||
-          !daily.time ||
-          !daily.temperature_2m_max ||
-          !daily.temperature_2m_min
-        ) {
-          console.error("Invalid daily data:", daily);
+        if (!daily || !daily.time || !daily.temperature_2m_max || !daily.temperature_2m_min) {
           throw new Error(locale === "fa" ? "داده روزانه نامعتبر" : "Invalid daily data");
         }
 
-        const temps: number[] = [];
-        const dates: string[] = [];
-
-        daily.time.forEach((dateStr: string, idx: number) => {
+        const formattedData = daily.time.map((dateStr: string, idx: number) => {
           const max = daily.temperature_2m_max?.[idx];
           const min = daily.temperature_2m_min?.[idx];
           if (typeof max === "number" && typeof min === "number") {
-            temps.push(Number(((max + min) / 2).toFixed(1))); // میانگین دما
-            dates.push(dateStr);
+            return {
+              day: getDay(dateStr, locale),
+              temp: Number(((max + min) / 2).toFixed(1)),
+            };
           }
-        });
+          return null;
+        }).filter(Boolean) as { day: string; temp: number }[];
 
-        if (temps.length === 0) {
+
+        if (formattedData.length === 0) {
           throw new Error(locale === "fa" ? "رکورد دمایی وجود ندارد" : "No temperature records");
         }
         
-        setDailyTemps(temps);
-        setDailyDates(dates);
-      } catch (err: any)
-      {
+        setDailyData(formattedData);
+      } catch (err: any) {
         if (err.name === "AbortError") return;
-        console.error("MonthlyTempChart fetch error:", err);
         setError(err.message || (locale === "fa" ? "خطا در دریافت داده‌ها" : "Failed to fetch data"));
       } finally {
         setIsLoading(false);
@@ -126,55 +120,66 @@ const MonthlyTempChart: React.FC<Props> = ({
     };
   }, [latitude, longitude, days, locale]);
 
-  return (
-    <Box>
-     
+  const gradientId = "monthlyTempGradient";
+  const chartColor = theme.palette.mode === 'light' ? theme.palette.action.active : theme.palette.primary.main;
 
-      {isLoading ? (
-        <Skeleton variant="rectangular" width="100%" height={300} />
-      ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : dailyTemps && dailyDates ? (
-        <LineChart
-          height={300}
-          xAxis={[{
-              data: dailyDates.map((d) => getDay(d, locale)),
-              scaleType: 'point',
-              tickLabelStyle: {
-                  fontSize: 10,
-              }
-          }]}
-          yAxis={[{
-              label: locale === 'fa' ? '(°C) دما' : 'Temp (°C)'
-          }]}
-          series={[{ 
-              id: "temp", 
-              data: dailyTemps, 
-              showMark: true,
-              valueFormatter: (value) => value == null ? '' : `${value}°`,
-          }]}
-          legend={{ hidden: true }}
-          sx={{
-             '.MuiChartsAxis-label': {
-                  transform: locale === 'fa' ? 'translateX(-25px)' : 'translateX(-35px)',
-              },
-              '.MuiCharts-markLabel': {
-                  transform: 'translateY(-8px)', // Move label 8px up
-                  fontSize: '10px',
-              },
-              '.MuiChartsAxis-directionX .MuiChartsAxis-tickLabel': {
-                  transform: 'translateY(5px)', // Move X-axis tick labels 5px down
-              },
-              '.MuiChartsAxis-directionY .MuiChartsAxis-tickLabel': {
-                  transform: 'translateX(-10px)', // Move Y-axis tick labels 10px left
-              },
-          }}
-        />
-      ) : (
-        <Typography>
-          {locale === "fa" ? "داده‌ای موجود نیست" : "No data available"}
-        </Typography>
-      )}
+  if (isLoading) {
+    return (
+      <Stack justifyContent="center" alignItems="center" sx={{ height: 300 }}>
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
+
+  if (!dailyData) {
+    return <Typography>{locale === "fa" ? "داده‌ای موجود نیست" : "No data available"}</Typography>;
+  }
+
+  return (
+    <Box sx={{ height: 300, width: "100%" }}>
+      <ResponsiveContainer>
+        <AreaChart 
+            data={dailyData}
+            margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
+        >
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={chartColor} stopOpacity={0.8}/>
+              <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <XAxis 
+            dataKey="day" 
+            stroke={theme.palette.text.secondary}
+            tick={{ fontSize: 10 }}
+            />
+          <YAxis 
+            stroke={theme.palette.text.secondary}
+            tick={{ fontSize: 10 }}
+            domain={['dataMin - 2', 'dataMax + 2']}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: theme.palette.background.paper,
+              borderColor: theme.palette.divider,
+              borderRadius: "10px",
+            }}
+            labelStyle={{ color: theme.palette.text.primary }}
+            formatter={(value: number) => [`${value}°C`, locale === 'fa' ? 'میانگین دما' : 'Avg Temp']}
+          />
+          <Area
+            type="monotone"
+            dataKey="temp"
+            stroke={chartColor}
+            strokeWidth={2}
+            fill={`url(#${gradientId})`}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </Box>
   );
 };

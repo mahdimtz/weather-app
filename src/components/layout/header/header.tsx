@@ -11,7 +11,6 @@ const Header = ({
   language,
   handleCityChange,
   selectedCity,
-  
 }: {
   language: "en" | "fa";
   handleCityChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,6 +23,7 @@ const Header = ({
   const { changeTheme, changeLanguage } = useAppContext();
 
   const [showPopOver, setShowPopOver] = useState<HTMLButtonElement | null>(null);
+  const [animateHeader, setAnimateHeader] = useState(false); // state برای افکت ورودی
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setShowPopOver(event.currentTarget);
   const handleClose = () => setShowPopOver(null);
@@ -34,6 +34,7 @@ const Header = ({
   const changeLanguageHandler = (lang: "en" | "fa") => changeLanguage(lang);
 
   useEffect(() => {
+    setAnimateHeader(true); // فعال شدن انیمیشن بعد از mount
     if ("geolocation" in navigator && !selectedCity) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -65,7 +66,13 @@ const Header = ({
   }, []);
 
   return (
-    <header>
+    <header
+      style={{
+        transform: animateHeader ? "translateY(0)" : "translateY(-100px)",
+        opacity: animateHeader ? 1 : 0,
+        transition: "all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)", // bounce effect
+      }}
+    >
       <Stack
         direction={"row"}
         sx={(theme) => ({
@@ -116,8 +123,8 @@ const Header = ({
           />
 
           <IconButton onClick={handleClick}>
-          <CiSettings />
-                </IconButton>
+            <CiSettings />
+          </IconButton>
           <PopOver
             open={open}
             id={id}
