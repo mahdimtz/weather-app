@@ -87,155 +87,175 @@ const Dashboard = () => {
         setMode={setMode}
       />
       <Container maxWidth={"xl"} sx={{ marginTop: "28px" }}>
-        <Stack sx={{ flexDirection: { md: "row", xs: "col" }, gap: "41px" }}>
-          
-           { isLoading || !weather ? 
-              <MainWeatherSkeleton />
-              :
-              <Stack
-            sx={(theme) => ({
-              borderRadius: "24px",
-              width: { xl: "607px", md: "50%" },
-              minHeight: "234px",
-              backgroundColor:
-                theme.palette.mode === "dark"
-                  ? theme.palette.secondary.dark
-                  : theme.palette.primary.main,
-              color: theme.palette.mode === "dark" ? "#fff" : "#003464",
-            })}
-          >
-            <Box
+      <Stack sx={{ flexDirection: { md: "row", xs: "column" }, gap: "41px" }}> 
+  {isLoading || !weather ? (
+    <MainWeatherSkeleton />
+  ) : (
+    <Stack
+      sx={(theme) => ({
+        borderRadius: "24px",
+        width: { xl: "607px", md: "50%", xs: "100%" }, 
+        minHeight: "234px",
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? theme.palette.secondary.dark
+            : theme.palette.primary.main,
+        color: theme.palette.mode === "dark" ? "#fff" : "#003464",
+      })}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          height: "100%",
+          padding: "20px 24px",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Stack direction="row" spacing={1}>
+            <Chip
+              label={location?.display_name.split(",")[0].trim()}
+              icon={<IconLocation />}
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                height: "100%",
-                padding: "20px 24px",
+                width: "auto", 
+                maxWidth: "100%",
+                height: "40px",
+                borderRadius: "50px",
+                padding: "10px 13px",
+                gap: "13px",
               }}
-            >
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Stack direction="row" spacing={1}>
-                  <Chip
-                    label={location?.display_name.split(",")[0].trim()}
-                    icon={<IconLocation />}
-                    sx={{
-                      width: "173px",
-                      height: "40px",
-                      borderRadius: "50px",
-                      padding: "10px 13px",
-                      gap: "13px",
-                    }}
-                  />
-                </Stack>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: "32px",
-                    fontWeight: "500",
-                    lineHeight: "37.5px",
-
-                    marginTop: "16px",
-                  }}
-                >
-                  {getDayOfWeek(weather?.daily?.time[0]!, language, true)}
-                </Typography>
-                <Box
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: "400",
-                    marginTop: "4px",
-                  }}
-                >
-                  <span>{formatTime(new Date(), language)}</span>
-                </Box>
-
-                <Typography
-                  sx={{
-                    fontSize: "25px",
-                    fontWeight: "700",
-                    lineHeight: "46.88px",
-                    marginTop: "16px",
-                  }}
-                  variant="caption"
-                >
-                  {weather?.current?.temperature_2m}
-                  <span> &#8451;</span>
-                </Typography>
-                <Box
-                  sx={{
-                    fontSize: "16px",
-                    fontWeight: "400",
-                    lineHeight: "16.41px",
-                    
-                  }}
-                >
-                  <span>
-                    {language === "en" ? "High" : "بیشینه"}:
-                    {weather &&
-                      findExtreme(weather.daily.temperature_2m_max, "max")}
-                  </span>
-                  
-                  <span>
-                    
-                    {language === "en" ? "Low" : " کمینه"}:
-                    {weather &&
-                      findExtreme(weather.daily.temperature_2m_min, "min")}
-                  </span>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                {weather &&
-                  handleIconWeather(
-                    weather.daily.weather_code[0],
-                    "194px",
-                    "110px"
-                  )}
-                <Typography variant="caption" sx={{ fontSize: "32px" }}>
-                  {weather &&
-                    handleWeatherName(weather?.current?.weather_code, language)}
-                </Typography>
-                <Typography variant="caption" sx={{ fontSize: "14px" }}>
-                  {weather?.current?.temperature_2m}{" "}
-                  {language === "en" ? " Feels Like" : " درجه احساس می شود"}
-                </Typography>
-              </Box>
-            </Box>
+            />
           </Stack>
-            
-            }
-          
-          
-
-          <Box
-            sx={(theme) => ({
-              borderRadius: "24px",
-              padding: "16px",
-              flex: "1",
-              backgroundColor:
-                theme.palette.mode === "dark"
-                  ? theme.palette.secondary.dark
-                  : theme.palette.primary.main,
-              color: theme.palette.mode === "dark" ? "#fff" : "#000",
-            })}
+          <Typography
+            variant="caption"
+            sx={{
+              fontSize: { xs: "24px", sm: "32px" },   
+              fontWeight: "500",
+              lineHeight: "37.5px",
+              marginTop: "16px",
+            }}
           >
-            <Typography
-              sx={(theme) => ({
-                fontSize: "18px",
-                fontWeight: "700",
-                color: theme.palette.mode === "dark" ? "#fff" : "#003464",
-              })}
-            >
-              {language === "en"
-                ? "Average Monthly Temprature"
-                : "میانگین دمای ماهانه"}
-            </Typography>
-            <MonthlyTempChart latitude={location?.lat} longitude={location?.lon} locale={language} />
+            {getDayOfWeek(weather?.daily?.time[0]!, language, true)}
+          </Typography>
+          <Box
+            sx={{
+              fontSize: "14px",
+              fontWeight: "400",
+              marginTop: "4px",
+            }}
+          >
+            <span>{formatTime(new Date(), language)}</span>
           </Box>
-        </Stack>
+
+          <Typography
+            sx={{
+              fontSize: { xs: "22px", sm: "25px" }, 
+              fontWeight: "700",
+              lineHeight: "46.88px",
+              marginTop: "16px",
+            }}
+            variant="caption"
+          >
+            {weather?.current?.temperature_2m}
+            <span> &#8451;</span>
+          </Typography>
+          <Box
+            sx={{
+              fontSize: { xs: "14px", sm: "16px" }, 
+              fontWeight: "400",
+              lineHeight: "16.41px",
+            }}
+          >
+            <span>
+              {language === "en" ? "High" : "بیشینه"}:
+              {weather &&
+                findExtreme(weather.daily.temperature_2m_max, "max")}
+            </span>
+
+            <span>
+              {language === "en" ? "Low" : " کمینه"}:
+              {weather &&
+                findExtreme(weather.daily.temperature_2m_min, "min")}
+            </span>
+          </Box>
+        </Box>
+        
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box 
+            sx={{ 
+              width: { xs: "100px", sm: "194px" }, 
+              height: { xs: "60px", sm: "110px" }, 
+              alignSelf: 'flex-end', 
+              mb: 1 
+            }}
+          >
+            {weather &&
+              handleIconWeather(
+                weather.daily.weather_code[0],
+                "100%", 
+                "100%"  
+              )}
+          </Box>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              fontSize: { xs: "22px", sm: "32px" }, 
+              textAlign: "right" 
+            }}
+          >
+            {weather &&
+              handleWeatherName(weather?.current?.weather_code, language)}
+          </Typography>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              fontSize: "14px",
+              textAlign: "right" 
+            }}
+          >
+            {weather?.current?.temperature_2m}{" "}
+            {language === "en" ? " Feels Like" : " درجه احساس می شود"}
+          </Typography>
+        </Box>
+      </Box>
+    </Stack>
+  )}
+
+  <Box
+    sx={(theme) => ({
+      borderRadius: "24px",
+      padding: "16px",
+      flex: "1",
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? theme.palette.secondary.dark
+          : theme.palette.primary.main,
+      color: theme.palette.mode === "dark" ? "#fff" : "#000",
+    })}
+  >
+    <Typography
+      sx={(theme) => ({
+        fontSize: "18px",
+        fontWeight: "700",
+        color: theme.palette.mode === "dark" ? "#fff" : "#003464",
+      })}
+    >
+      {language === "en"
+        ? "Average Monthly Temprature"
+        : "میانگین دمای ماهانه"}
+    </Typography>
+    <MonthlyTempChart
+      latitude={location?.lat}
+      longitude={location?.lon}
+      locale={language}
+    />
+  </Box>
+</Stack>
         <Box
          sx={(theme) => ({
           marginTop: "28px",
@@ -255,7 +275,6 @@ const Dashboard = () => {
           "&::-webkit-scrollbar": {
             height: "8px",     
           },
-          // استایل مسیر اسکرول‌بار
           "&::-webkit-scrollbar-track": {
             backgroundColor: theme.palette.mode === 'dark' 
               ? "rgba(255, 255, 255, 0.1)"      

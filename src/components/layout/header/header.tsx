@@ -67,11 +67,7 @@ const Header = ({
 
   return (
     <header
-      style={{
-        transform: animateHeader ? "translateY(0)" : "translateY(-100px)",
-        opacity: animateHeader ? 1 : 0,
-        transition: "all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)", 
-      }}
+    
     >
       <Stack
         direction={"row"}

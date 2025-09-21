@@ -36,17 +36,33 @@ const PopOver = ({
     <MuiPopover
       sx={{ padding: "0 16px" }}
       id={id}
+      disablePortal 
       open={open}
       anchorEl={showPopOver}
       onClose={handleClose}
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "left",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right", 
+      }}
+      PaperProps={{
+        sx: {
+          maxWidth: "calc(100vw - 32px)", 
+          marginRight: "16px"
+        },
       }}
     >
       <Stack
         direction={"column"}
-        sx={{ padding: "20px 15px", width: "220px", height: "240px" }}
+        sx={{
+          padding: "20px 15px",
+          minWidth: "220px",
+          height: "240px",
+          boxSizing: "border-box", 
+        }}
       >
         <Typography variant="caption" marginBottom={"6px"} fontSize={"16px"}>
           {t("header.popover.mode")}
@@ -54,12 +70,12 @@ const PopOver = ({
         <Stack direction={"row"} sx={{ gap: "12px" }}>
           <Button
             variant={themeMode === "dark" ? "contained" : "outlined"}
-            onClick={() =>{ 
-              onChangeTheme("dark")
-              handleClose()
+            onClick={() => {
+              onChangeTheme("dark");
+              handleClose();
             }}
             sx={(theme) => ({
-              width: "94px",
+              flex: 1, 
               borderRadius: "10px",
               textTransform: "none",
               fontSize: "14px",
@@ -86,12 +102,12 @@ const PopOver = ({
 
           <Button
             variant={themeMode === "light" ? "contained" : "outlined"}
-            onClick={() =>{ 
-              onChangeTheme("light")
-              handleClose()
+            onClick={() => {
+              onChangeTheme("light");
+              handleClose();
             }}
             sx={(theme) => ({
-              width: "94px",
+              flex: 1, 
               borderRadius: "10px",
               textTransform: "none",
               fontSize: "14px",
@@ -124,12 +140,12 @@ const PopOver = ({
         <Stack direction={"row"} sx={{ gap: "12px" }}>
           <Button
             variant={language === "en" ? "contained" : "outlined"}
-            onClick={() =>{
-               onChangeLanguage("en")
-               handleClose()
-              }}
+            onClick={() => {
+              onChangeLanguage("en");
+              handleClose();
+            }}
             sx={(theme) => ({
-              width: "94px",
+              flex: 1, 
               borderRadius: "10px",
               textTransform: "none",
               fontSize: "14px",
@@ -156,12 +172,12 @@ const PopOver = ({
 
           <Button
             variant={language === "fa" ? "contained" : "outlined"}
-            onClick={() =>{
-              onChangeLanguage("fa")
-              handleClose()
-             }}
+            onClick={() => {
+              onChangeLanguage("fa");
+              handleClose();
+            }}
             sx={(theme) => ({
-              width: "94px",
+              flex: 1, 
               borderRadius: "10px",
               textTransform: "none",
               fontSize: "14px",
@@ -190,35 +206,29 @@ const PopOver = ({
         <Divider sx={{ margin: "10px 0" }} />
 
         <Button
-      variant="text"
-      onClick={() => navigate("/")}
-      sx={{
-        justifyContent: "flex-end",
-        gap: "8px",
-        padding: "6px 12px",
-        borderRadius: "8px",
-        textTransform: "none",
-        fontSize: "14px",
-        fontWeight: 500,
-        color: theme.palette.primary.main,      
-        "&:hover": {
-          backgroundColor: theme.palette.action.hover,     
-          color: theme.palette.primary.main,     
-          "& .logout-icon": {
-            color: theme.palette.primary.main,     
-          },
-        },
-      }}
-      endIcon={
-        <IconLogOut
-          color={theme.palette.primary.main}    
-        />
-      }
-    >
-      {t("header.popover.exitBtn")}
-    </Button>
-
-
+          variant="text"
+          onClick={() => navigate("/")}
+          sx={{
+            justifyContent: "flex-end",
+            gap: "8px",
+            padding: "6px 12px",
+            borderRadius: "8px",
+            textTransform: "none",
+            fontSize: "14px",
+            fontWeight: 500,
+            color: theme.palette.primary.main,
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
+              color: theme.palette.primary.main,
+              "& .logout-icon": {
+                color: theme.palette.primary.main,
+              },
+            },
+          }}
+          endIcon={<IconLogOut color={theme.palette.primary.main} />}
+        >
+          {t("header.popover.exitBtn")}
+        </Button>
       </Stack>
     </MuiPopover>
   );
