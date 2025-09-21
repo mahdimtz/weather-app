@@ -92,7 +92,7 @@ const Footer = () => {
               underline="hover"
               sx={{ fontSize: "16px", color: "inherit" }}
             >
-              @mahdimtz
+              mahdimtz
             </Link>
           </Box>
         </Stack>
