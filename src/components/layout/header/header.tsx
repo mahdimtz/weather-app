@@ -23,7 +23,6 @@ const Header = ({
   const { changeTheme, changeLanguage } = useAppContext();
 
   const [showPopOver, setShowPopOver] = useState<HTMLButtonElement | null>(null);
-  const [animateHeader, setAnimateHeader] = useState(false);    
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setShowPopOver(event.currentTarget);
   const handleClose = () => setShowPopOver(null);
@@ -34,7 +33,6 @@ const Header = ({
   const changeLanguageHandler = (lang: "en" | "fa") => changeLanguage(lang);
 
   useEffect(() => {
-    setAnimateHeader(true);       
     if ("geolocation" in navigator && !selectedCity) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
