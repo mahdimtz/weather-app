@@ -1,11 +1,9 @@
 import {
   Box,
   Button,
-  type SelectChangeEvent,
   Stack,
   TextField,
   Typography,
-  useTheme,
   Container,
   Snackbar,
   Alert,
@@ -14,18 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useAppContext } from "../context/app/app-context";
-import LanguageSelect from "../components/common/select-language";
 
 const Login = () => {
   const [showToast, setShowToast] = useState(false);
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-  const { language, changeLanguage } = useAppContext();
-  const theme = useTheme();
+  const { language } = useAppContext();
 
   const isRTL = language === "fa";
-  const labelColor = theme.palette.mode === "dark" ? "#ffffff" : "#8895A0";
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -42,10 +36,7 @@ const Login = () => {
     }, 2000); // Wait for toast to be visible before navigating
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedLanguage(event.target.value);
-    changeLanguage(event.target.value);
-  };
+  
 
   return (
     <>
@@ -98,10 +89,7 @@ const Login = () => {
                   id="outlined-basic"
                   label={t("login.placeholder")}
                   variant="outlined"
-                  InputLabelProps={{
-                    style: { color: labelColor },
-                    shrink: true,
-                  }}
+                  dir={isRTL ? "rtl":"ltr"}
                   value={username}
                   onChange={(e) => {
                     setUsername(e.target.value);
@@ -109,25 +97,12 @@ const Login = () => {
                   }}
                   error={!!error}
                   helperText={error}
-                  InputProps={{
-                    style: { direction: isRTL ? "rtl" : "ltr" },
-                  }}
+                  
                   sx={{
-                    width: { md: "386px", xs: "100%" },
-                    height: "56px",
+                    width: {  xs: "100%" },
                     marginBottom: "200px",
                     marginTop: "32px",
-                    "& .MuiInputLabel-root": {
-                      left: isRTL ? "auto" : "14px",
-                      right: isRTL ? "14px" : "auto",
-                      transformOrigin: isRTL ? "top right" : "top left",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      textAlign: isRTL ? "right" : "left",
-                    },
-                    "& .MuiInputBase-input": {
-                      textAlign: isRTL ? "right" : "left",
-                    },
+                    
                   }}
                 />
 
@@ -149,12 +124,7 @@ const Login = () => {
             </Box>
           </Stack>
         </Container>
-        <LanguageSelect
-          selectedLanguage={selectedLanguage}
-          handleChange={handleChange}
-          t={t}
-          labelColor={labelColor}
-        />
+        
       </Stack>
       <Snackbar
         open={showToast}
